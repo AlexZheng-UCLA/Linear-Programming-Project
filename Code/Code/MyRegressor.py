@@ -1,3 +1,5 @@
+from audioop import reverse
+from select import select
 from traceback import print_tb
 from sklearn.metrics import mean_absolute_error
 import numpy as np
@@ -15,7 +17,19 @@ class MyRegressor:
     def select_features(self):
         ''' Task 1-3
             Todo: '''
+        weight = list(self.weight)
+        weight = weight.sort().reversed()
+        
+        per = 0.01 
 
+        N = int(per * len(weight))
+        selected_weight = weight[:N]
+
+        selected_feat = []
+        for ele in selected_weight:
+            selected_feat.append(self.weight.index(ele))
+
+        print(selected_feat)
         return selected_feat # The index List of selected features
         
         
@@ -39,11 +53,8 @@ class MyRegressor:
             Todo: '''
         N, M = trainX.shape
         trainY = trainY.reshape(N, -1)
-        # print("trainX shape:", trainX.shape)
-        # print("trainY shape:", trainY.shape)
 
         obj = [0] * M + [0] + [1/N] * N + [self.alpha] * M
-        # print("obj shape:", len(obj))
 
         # l_ineq = [-X, -1, -I, 0 
         #            X, 1, -I, 0] 
@@ -79,8 +90,11 @@ class MyRegressor:
         # print("optimal b", opt_b)
 
         y = np.matmul(trainX, self.weight.reshape(M, -1)) + ones * self.bias
-        # print("y_pred shape", y_pred.shape)
-        train_error = la.norm(trainY - y, ord=1) / N
+        y = y.squeeze(1)
+        trainY = trainY.squeeze(1)
+        # print("y_pred shape", y.shape)
+        # train_error = la.norm(trainY - y, ord=1) / N
+        train_error = mean_absolute_error(trainY, y)
 
         return train_error
     
