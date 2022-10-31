@@ -1,4 +1,9 @@
+from traceback import print_tb
 from sklearn.metrics import mean_absolute_error
+import numpy as np
+from scipy.optimize import linprog
+import numpy.linalg as la
+
 
 class MyRegressor:
     def __init__(self, alpha):
@@ -10,13 +15,14 @@ class MyRegressor:
     def select_features(self):
         ''' Task 1-3
             Todo: '''
-        
+
         return selected_feat # The index List of selected features
         
         
     def select_sample(self, trainX, trainY):
         ''' Task 1-4
             Todo: '''
+        
         
         return selected_trainX, selected_trainY    # A subset of trainX and trainY
 
@@ -31,7 +37,51 @@ class MyRegressor:
     def train(self, trainX, trainY):
         ''' Task 1-2
             Todo: '''
+        N, M = trainX.shape
+        trainY = trainY.reshape(N, -1)
+        # print("trainX shape:", trainX.shape)
+        # print("trainY shape:", trainY.shape)
+
+        obj = [0] * M + [0] + [1/N] * N + [self.alpha] * M
+        # print("obj shape:", len(obj))
+
+        # l_ineq = [-X, -1, -I, 0 
+        #            X, 1, -I, 0] 
+        #            I, 0,  0, -I
+        #           -I, 0,  0, -I]
+        ones = np.ones((N, 1))
+        zeros_theta0 = np.zeros((N, M))
+        zeros_b = np.zeros((M, 1))
+        zeros_z = np.zeros((M, N))
+
+        l1 = np.hstack([-trainX, -ones, -np.eye(N), zeros_theta0])
+        # print("l1 shape:", l1.shape)
+        l2 = np.hstack([trainX, ones, -np.eye(N), zeros_theta0])
+        # print("l2 shape:", l2.shape)
+        l3 = np.hstack([np.eye(M), zeros_b, zeros_z, -np.eye(M)])
+        # print("l3 shape:", l3.shape)
+        l4 = np.hstack([-np.eye(M), zeros_b, zeros_z, -np.eye(M)])
+        # print("l4 shape:", l4.shape)
         
+        l = np.vstack([l1, l2, l3, l4])
+        # print("l shape:", l.shape)
+        r = np.vstack([-trainY, trainY, np.zeros((M, 1)), np.zeros((M, 1))])
+        # print("r shape:", r.shape)
+
+        opt = linprog(c=obj, A_ub=l, b_ub=r)
+        # print("If success:", opt.success)
+        self.weight = opt.x[:M]
+        # print("weight shape", self.weight.shape)
+        self.bias = opt.x[M:M+1]
+
+        # print("optimal value", opt.fun)
+        # print("optimal theta shape", opt_theta.shape)
+        # print("optimal b", opt_b)
+
+        y = np.matmul(trainX, self.weight.reshape(M, -1)) + ones * self.bias
+        # print("y_pred shape", y_pred.shape)
+        train_error = la.norm(trainY - y, ord=1) / N
+
         return train_error
     
     

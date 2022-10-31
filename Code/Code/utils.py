@@ -5,17 +5,17 @@ import matplotlib.pyplot as plt
 from sklearn import preprocessing, model_selection
 
 def prepare_data_gaussian():
-    num_dtp=1000
-    dims=500
+    num_dtp=1000        # sample 
+    dims=500            # feature 
     spars_param=0.8
 
     data = dict()
     feats = np.zeros((num_dtp, dims))
     for i in range(dims):
-        dev = np.random.rand()
+        dev = np.random.rand()      # random variance 
         x = np.random.uniform(-1,1,size=(num_dtp,)) + np.random.normal(0,dev,(num_dtp,))
         np.random.shuffle(x)
-        feats[:,i] = x
+        feats[:,i] = x 
     
     theta = 5 * np.random.rand(dims)
     ind = np.random.choice(np.arange(dims), round(dims*spars_param), replace=False)
