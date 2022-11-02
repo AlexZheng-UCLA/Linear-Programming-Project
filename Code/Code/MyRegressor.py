@@ -4,46 +4,65 @@ from traceback import print_tb
 from sklearn.metrics import mean_absolute_error
 import numpy as np
 from scipy.optimize import linprog
-import numpy.linalg as la
 
 
 class MyRegressor:
     def __init__(self, alpha):
         self.weight = None
         self.bias = None
-        self.training_cost = 0   # N * N
+        self.training_cost = 0   # N * M
         self.alpha = alpha
         
     def select_features(self):
         ''' Task 1-3
             Todo: '''
-        weight = list(self.weight)
-        weight = weight.sort().reversed()
-        
-        per = 0.01 
+        weight = self.weight
+        selected_feat = np.flip(np.argsort(weight))
 
-        N = int(per * len(weight))
-        selected_weight = weight[:N]
-
-        selected_feat = []
-        for ele in selected_weight:
-            selected_feat.append(self.weight.index(ele))
-
-        print(selected_feat)
         return selected_feat # The index List of selected features
         
         
     def select_sample(self, trainX, trainY):
         ''' Task 1-4
             Todo: '''
+        N = trainX.shape[0]
+
+        predY = trainX @ self.weight + self.bias
+        train_error = np.abs(trainY - predY)
+
+        ## METHOD 1: use data with smallest/largest training error
+        selected_ind = np.argsort(train_error)
+        selected_ind = np.flip(selected_ind)
         
-        
+        selected_trainX = trainX[selected_ind, :]
+        selected_trainY = trainY[selected_ind]
+
+        ## METHOD 2: cluster the data into 5 groups by the training error
+        # sorted_ind = np.argsort(train_error)
+        # selected_ind = []
+        # steps = int(N/5)
+        # for i in range(steps):
+        #     selected_ind.extend(sorted_ind[i::steps])
+        # print(len(selected_ind))
+        # selected_trainX = trainX[selected_ind, :]
+        # selected_trainY = trainY[selected_ind]
+
+        ## METHOD 3: random selection 
+        # selected_ind = np.arange(N)
+        # np.random.shuffle(selected_ind)    
+
+        # selected_trainX = trainX[selected_ind, :]
+        # selected_trainY = trainY[selected_ind]
+
+
+
         return selected_trainX, selected_trainY    # A subset of trainX and trainY
 
 
     def select_data(self, trainX, trainY):
         ''' Task 1-5
             Todo: '''
+        # METHOD 1: perform sample selection and then feature selection
         
         return selected_trainX, selected_trainY
     
@@ -66,34 +85,26 @@ class MyRegressor:
         zeros_z = np.zeros((M, N))
 
         l1 = np.hstack([-trainX, -ones, -np.eye(N), zeros_theta0])
-        # print("l1 shape:", l1.shape)
         l2 = np.hstack([trainX, ones, -np.eye(N), zeros_theta0])
-        # print("l2 shape:", l2.shape)
         l3 = np.hstack([np.eye(M), zeros_b, zeros_z, -np.eye(M)])
-        # print("l3 shape:", l3.shape)
         l4 = np.hstack([-np.eye(M), zeros_b, zeros_z, -np.eye(M)])
-        # print("l4 shape:", l4.shape)
         
         l = np.vstack([l1, l2, l3, l4])
-        # print("l shape:", l.shape)
         r = np.vstack([-trainY, trainY, np.zeros((M, 1)), np.zeros((M, 1))])
-        # print("r shape:", r.shape)
 
         opt = linprog(c=obj, A_ub=l, b_ub=r)
-        # print("If success:", opt.success)
+        print("If success:", opt.success)
         self.weight = opt.x[:M]
         # print("weight shape", self.weight.shape)
         self.bias = opt.x[M:M+1]
 
         # print("optimal value", opt.fun)
-        # print("optimal theta shape", opt_theta.shape)
-        # print("optimal b", opt_b)
 
-        y = np.matmul(trainX, self.weight.reshape(M, -1)) + ones * self.bias
-        y = y.squeeze(1)
+        # y = np.matmul(trainX, self.weight.reshape(M, -1)) + ones * self.bias
+        # y = y.squeeze(1)
+
+        y = trainX @ self.weight + self.bias
         trainY = trainY.squeeze(1)
-        # print("y_pred shape", y.shape)
-        # train_error = la.norm(trainY - y, ord=1) / N
         train_error = mean_absolute_error(trainY, y)
 
         return train_error
