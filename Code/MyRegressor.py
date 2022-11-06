@@ -62,15 +62,37 @@ class MyRegressor:
     def select_data(self, trainX, trainY):
         ''' Task 1-5
             Todo: '''
-        N = trainX.shape[0]
+        N, M = trainX.shape[0], trainX.shape[1]
+        features = self.select_features()
+        sampleX, sampleY = self.select_sample(trainX, trainY)
+
         # METHOD 1: select all sample then reduce samples to increase features 
 
-        for feat_num in [0.4, 0.3, 0.2, 0.1, 0.05]:  
+        opt_err = np.inf
+        opt_trainX, opt_trainY = sampleX, sampleY
+
+        for feat_per in [0.4, 0.3, 0.2, 0.1, 0.05]:  
             
-            sample_num = int(self.training_cost / feat_num)
+            feat_num = int(M*feat_per)
+            sample_num = int(self.training_cost / feat_num * N)
+            selected_features = features[:feat_num]
 
+            selected_sampleX = sampleX[:sample_num]
+            selected_sampleY = sampleY[:sample_num]
+            
+            selected_trainX = selected_sampleX[:, selected_features]
+            selected_trainY = selected_sampleY[:, selected_features]
 
-        
+            model = MyRegressor(alpha=0)
+            err = model.train(selected_trainX, selected_sampleY)
+            if err < opt_err:
+                opt_err = err
+                opt_trainX = selected_trainY
+                opt_trainY = selected_trainY
+
+        selected_trainX = opt_trainX
+        selected_trainY = opt_trainY
+
         return selected_trainX, selected_trainY
     
     
