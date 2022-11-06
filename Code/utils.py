@@ -44,7 +44,8 @@ def prepare_data_news():
     # https://archive.ics.uci.edu/ml/datasets/online+news+popularity
     data = dict()
     
-    filename = 'OnlineNewsPopularity/OnlineNewsPopularity.csv'
+    # filename = 'OnlineNewsPopularity/OnlineNewsPopularity.csv'
+    filename = 'OnlineNewsPopularity.csv'
     
     # read the data
     allfeatnames = []

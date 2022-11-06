@@ -27,15 +27,17 @@ class MyRegressor:
             Todo: '''
         N = trainX.shape[0]
 
-        predY = trainX @ self.weight + self.bias
-        train_error = np.abs(trainY - predY)
+        # y, _ = self.evaluate(trainX, trainY)
+        # train_error = np.abs(trainY - y)
 
-        ## METHOD 1: use data with smallest/largest training error
-        selected_ind = np.argsort(train_error)
-        selected_ind = np.flip(selected_ind)
+        # ## METHOD 1: use data with smallest/largest training error
+        # selected_ind = np.argsort(train_error)
+        # # selected_ind = np.flip(selected_ind)
         
-        selected_trainX = trainX[selected_ind, :]
-        selected_trainY = trainY[selected_ind]
+        # selected_trainX = trainX[selected_ind]
+        # selected_trainY = trainY[selected_ind]
+
+
 
         ## METHOD 2: cluster the data into 5 groups by the training error
         # sorted_ind = np.argsort(train_error)
@@ -48,13 +50,11 @@ class MyRegressor:
         # selected_trainY = trainY[selected_ind]
 
         ## METHOD 3: random selection 
-        # selected_ind = np.arange(N)
-        # np.random.shuffle(selected_ind)    
+        selected_ind = np.arange(N)
+        np.random.shuffle(selected_ind)    
 
-        # selected_trainX = trainX[selected_ind, :]
-        # selected_trainY = trainY[selected_ind]
-
-
+        selected_trainX = trainX[selected_ind, :]
+        selected_trainY = trainY[selected_ind]
 
         return selected_trainX, selected_trainY    # A subset of trainX and trainY
 
