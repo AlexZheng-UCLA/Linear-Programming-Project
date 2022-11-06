@@ -13,6 +13,7 @@ class MyRegressor:
         self.bias = None
         self.training_cost = 0   # N * M
         self.alpha = alpha
+        self.features = None
         
     def select_features(self):
         ''' Task 1-3
@@ -32,22 +33,22 @@ class MyRegressor:
         train_error = np.abs(trainY - y)
 
         ## METHOD 1: use data with smallest/largest training error
-        selected_ind = np.argsort(train_error)
-        # selected_ind = np.flip(selected_ind)
+        # selected_ind = np.argsort(train_error)
+        # # selected_ind = np.flip(selected_ind)
         
-        selected_trainX = trainX[selected_ind]
-        selected_trainY = trainY[selected_ind]
+        # selected_trainX = trainX[selected_ind]
+        # selected_trainY = trainY[selected_ind]
 
 
         # METHOD 2: cluster the data into 5 groups by the training error
-        # sorted_ind = np.argsort(train_error)
-        # selected_ind = []
-        # steps = int(N/5)
-        # for i in range(steps):
-        #     selected_ind.extend(sorted_ind[i::steps])
-        # print(len(selected_ind))
-        # selected_trainX = trainX[selected_ind, :]
-        # selected_trainY = trainY[selected_ind]
+        sorted_ind = np.argsort(train_error)
+        selected_ind = []
+        steps = int(N/5)
+        for i in range(steps):
+            selected_ind.extend(sorted_ind[i::steps])
+        print(len(selected_ind))
+        selected_trainX = trainX[selected_ind, :]
+        selected_trainY = trainY[selected_ind]
 
         # ## METHOD 3: random selection 
         # selected_ind = np.arange(N)
@@ -66,32 +67,37 @@ class MyRegressor:
         features = self.select_features()
         sampleX, sampleY = self.select_sample(trainX, trainY)
 
-        # METHOD 1: select all sample then reduce samples to increase features 
-
         opt_err = np.inf
         opt_trainX, opt_trainY = sampleX, sampleY
+        opt_feat = features
 
-        for feat_per in [0.4, 0.3, 0.2, 0.1, 0.05]:  
-            
+        self.training_cost
+        for feat_per in []:
+
             feat_num = int(M*feat_per)
-            sample_num = int(self.training_cost / feat_num * N)
+            sample_num = int(self.training_cost / feat_per * N)
+            print(f"sample_num: {sample_num}")
+            
             selected_features = features[:feat_num]
 
             selected_sampleX = sampleX[:sample_num]
             selected_sampleY = sampleY[:sample_num]
             
             selected_trainX = selected_sampleX[:, selected_features]
-            selected_trainY = selected_sampleY[:, selected_features]
+            selected_trainY = selected_sampleY
 
             model = MyRegressor(alpha=0)
-            err = model.train(selected_trainX, selected_sampleY)
+            err = model.train(selected_trainX, selected_trainY)
+
             if err < opt_err:
                 opt_err = err
-                opt_trainX = selected_trainY
+                opt_trainX = selected_trainX
                 opt_trainY = selected_trainY
+                opt_feat = features[:feat_num]
 
         selected_trainX = opt_trainX
         selected_trainY = opt_trainY
+        self.features = opt_feat
 
         return selected_trainX, selected_trainY
     
