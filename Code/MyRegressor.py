@@ -1,4 +1,5 @@
 from audioop import reverse
+from random import sample
 from select import select
 from traceback import print_tb
 from sklearn.metrics import mean_absolute_error
@@ -27,27 +28,26 @@ class MyRegressor:
             Todo: '''
         N = trainX.shape[0]
 
-        # y, _ = self.evaluate(trainX, trainY)
-        # train_error = np.abs(trainY - y)
+        y, _ = self.evaluate(trainX, trainY)
+        train_error = np.abs(trainY - y)
 
-        # ## METHOD 1: use data with smallest/largest training error
-        # selected_ind = np.argsort(train_error)
-        # # selected_ind = np.flip(selected_ind)
+        ## METHOD 1: use data with smallest/largest training error
+        selected_ind = np.argsort(train_error)
+        # selected_ind = np.flip(selected_ind)
         
-        # selected_trainX = trainX[selected_ind]
-        # selected_trainY = trainY[selected_ind]
+        selected_trainX = trainX[selected_ind]
+        selected_trainY = trainY[selected_ind]
 
 
-
-        ## METHOD 2: cluster the data into 5 groups by the training error
-        # sorted_ind = np.argsort(train_error)
-        # selected_ind = []
-        # steps = int(N/5)
-        # for i in range(steps):
-        #     selected_ind.extend(sorted_ind[i::steps])
-        # print(len(selected_ind))
-        # selected_trainX = trainX[selected_ind, :]
-        # selected_trainY = trainY[selected_ind]
+        # METHOD 2: cluster the data into 5 groups by the training error
+        sorted_ind = np.argsort(train_error)
+        selected_ind = []
+        steps = int(N/5)
+        for i in range(steps):
+            selected_ind.extend(sorted_ind[i::steps])
+        print(len(selected_ind))
+        selected_trainX = trainX[selected_ind, :]
+        selected_trainY = trainY[selected_ind]
 
         ## METHOD 3: random selection 
         selected_ind = np.arange(N)
@@ -56,13 +56,20 @@ class MyRegressor:
         selected_trainX = trainX[selected_ind, :]
         selected_trainY = trainY[selected_ind]
 
-        return selected_trainX, selected_trainY    # A subset of trainX and trainY
+        return selected_trainX[: N*self.training_cost], selected_trainY[: N*self.training_cost]    # A subset of trainX and trainY
 
 
     def select_data(self, trainX, trainY):
         ''' Task 1-5
             Todo: '''
-        # METHOD 1: perform sample selection and then feature selection
+        N = trainX.shape[0]
+        # METHOD 1: select all sample then reduce samples to increase features 
+
+        for feat_num in [0.4, 0.3, 0.2, 0.1, 0.05]:  
+            
+            sample_num = int(self.training_cost / feat_num)
+
+
         
         return selected_trainX, selected_trainY
     
