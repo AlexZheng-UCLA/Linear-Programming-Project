@@ -40,23 +40,23 @@ class MyRegressor:
 
 
         # METHOD 2: cluster the data into 5 groups by the training error
-        sorted_ind = np.argsort(train_error)
-        selected_ind = []
-        steps = int(N/5)
-        for i in range(steps):
-            selected_ind.extend(sorted_ind[i::steps])
-        print(len(selected_ind))
-        selected_trainX = trainX[selected_ind, :]
-        selected_trainY = trainY[selected_ind]
+        # sorted_ind = np.argsort(train_error)
+        # selected_ind = []
+        # steps = int(N/5)
+        # for i in range(steps):
+        #     selected_ind.extend(sorted_ind[i::steps])
+        # print(len(selected_ind))
+        # selected_trainX = trainX[selected_ind, :]
+        # selected_trainY = trainY[selected_ind]
 
-        ## METHOD 3: random selection 
-        selected_ind = np.arange(N)
-        np.random.shuffle(selected_ind)    
+        # ## METHOD 3: random selection 
+        # selected_ind = np.arange(N)
+        # np.random.shuffle(selected_ind)    
 
-        selected_trainX = trainX[selected_ind, :]
-        selected_trainY = trainY[selected_ind]
+        # selected_trainX = trainX[selected_ind, :]
+        # selected_trainY = trainY[selected_ind]
 
-        return selected_trainX[: N*self.training_cost], selected_trainY[: N*self.training_cost]    # A subset of trainX and trainY
+        return selected_trainX, selected_trainY    # A subset of trainX and trainY
 
 
     def select_data(self, trainX, trainY):
