@@ -113,7 +113,7 @@ class MyRegressor:
         print(f"feat_per: {opt_feat_per}")
         print(f"sample_per: {opt_sample_per}")
 
-        return opt_trainX, opt_trainY
+        return selected_trainX, selected_trainY
     
     
     def train(self, trainX, trainY):

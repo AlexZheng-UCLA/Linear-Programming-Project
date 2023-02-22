@@ -36,114 +36,114 @@ print(f"test_error: {test_error}")
 
 ## TASK 1-3 ***********************************************************************
 
-# old_regressor = MyRegressor(alpha=opt_alpha)
-# old_regressor.train(trainX, trainY)
+old_regressor = MyRegressor(alpha=opt_alpha)
+old_regressor.train(trainX, trainY)
 
-# feat = old_regressor.select_features()
-# regressor = MyRegressor(alpha=0)
-# feat_num = []
-# train_error = []
-# test_error = []
+feat = old_regressor.select_features()
+regressor = MyRegressor(alpha=0)
+feat_num = []
+train_error = []
+test_error = []
 
-# for per in [0.01, 0.1, 0.3, 0.5, 1]:
+for per in [0.01, 0.1, 0.3, 0.5, 1]:
 
-#     feat_num.append(per)
-#     num = int(len(feat)*per)
-#     selected_feat = feat[:num]
+    feat_num.append(per)
+    num = int(len(feat)*per)
+    selected_feat = feat[:num]
 
-#     trainX_s = trainX[:, selected_feat]
-#     testX_s = testX[:, selected_feat]
-#     error = regressor.train(trainX_s, trainY)
-#     train_error.append(error)
+    trainX_s = trainX[:, selected_feat]
+    testX_s = testX[:, selected_feat]
+    error = regressor.train(trainX_s, trainY)
+    train_error.append(error)
 
-#     _, error = regressor.evaluate(testX_s, testY)
-#     test_error.append(error)
+    _, error = regressor.evaluate(testX_s, testY)
+    test_error.append(error)
 
-# print(f"feature num: {feat_num}")
-# print(f"train_error: {train_error}")
-# print(f"test_error: {test_error}")
-# plot_result({'taskID':'1-3', 'feat_num':feat_num, 'train_err':train_error, 'test_err':test_error})
+print(f"feature num: {feat_num}")
+print(f"train_error: {train_error}")
+print(f"test_error: {test_error}")
+plot_result({'taskID':'1-3', 'feat_num':feat_num, 'train_err':train_error, 'test_err':test_error})
 
-## TASK 1-4 ***************************************************************
+# TASK 1-4 ***************************************************************
 
-# old_regressor = MyRegressor(alpha=opt_alpha)
-# old_regressor.train(trainX, trainY)
-# selected_trainX, selected_trainY = old_regressor.select_sample(trainX, trainY)
+old_regressor = MyRegressor(alpha=opt_alpha)
+old_regressor.train(trainX, trainY)
+selected_trainX, selected_trainY = old_regressor.select_sample(trainX, trainY)
 
-# regressor = MyRegressor(alpha=0)
-# sample_num = []
-# train_error = []
-# test_error = []
+regressor = MyRegressor(alpha=0)
+sample_num = []
+train_error = []
+test_error = []
 
-# for per in [0.01, 0.1, 0.3, 0.5, 1]:
+for per in [0.01, 0.1, 0.3, 0.5, 1]:
 
-#     sample_num.append(per)
-#     num = int(N_train * per)
+    sample_num.append(per)
+    num = int(N_train * per)
 
-#     trainX_s = selected_trainX[:num]
-#     trainY_s = selected_trainY[:num]
+    trainX_s = selected_trainX[:num]
+    trainY_s = selected_trainY[:num]
 
-#     error = regressor.train(trainX_s, trainY_s)
-#     train_error.append(error)
+    error = regressor.train(trainX_s, trainY_s)
+    train_error.append(error)
 
-#     _, error = regressor.evaluate(testX, testY)
-#     test_error.append(error)
+    _, error = regressor.evaluate(testX, testY)
+    test_error.append(error)
 
-# print(f"sample num: {sample_num}")
-# print(f"train_error: {train_error}")
-# print(f"test_error: {test_error}")
-# plot_result({'taskID':'1-4', 'sample_num':sample_num, 'train_err':train_error, 'test_err':test_error})
+print(f"sample num: {sample_num}")
+print(f"train_error: {train_error}")
+print(f"test_error: {test_error}")
+plot_result({'taskID':'1-4', 'sample_num':sample_num, 'train_err':train_error, 'test_err':test_error})
 
-## TASK 1-5 ***************************************************************
+# TASK 1-5 ***************************************************************
 
-# old_regressor = MyRegressor(alpha=opt_alpha)
-# old_regressor.train(trainX, trainY)
+old_regressor = MyRegressor(alpha=opt_alpha)
+old_regressor.train(trainX, trainY)
 
-# regressor = MyRegressor(alpha=0)
-# train_error = []
-# test_error = []
-# communication_cost = [0.01, 0.1, 0.3, 0.5, 1]
+regressor = MyRegressor(alpha=0)
+train_error = []
+test_error = []
+communication_cost = [0.01, 0.1, 0.3, 0.5, 1]
 
-# for per in communication_cost:
+for per in communication_cost:
 
-#     old_regressor.training_cost = per 
-#     trainX_s, trainY_s = old_regressor.select_data(trainX, trainY)
-#     selected_feat = old_regressor.features
+    old_regressor.training_cost = per 
+    trainX_s, trainY_s = old_regressor.select_data(trainX, trainY)
+    selected_feat = old_regressor.features
 
-#     error = regressor.train(trainX_s, trainY_s)
-#     train_error.append(error)
+    error = regressor.train(trainX_s, trainY_s)
+    train_error.append(error)
 
-#     testX_s = testX[:, selected_feat]
-#     _, error = regressor.evaluate(testX_s, testY)
-#     test_error.append(error)
+    testX_s = testX[:, selected_feat]
+    _, error = regressor.evaluate(testX_s, testY)
+    test_error.append(error)
 
-# print(f"cost: {communication_cost}")
-# print(f"train_error: {train_error}")
-# print(f"test_error: {test_error}")
-# plot_result({'taskID':'1-5', 'cost':communication_cost, 'train_err':train_error, 'test_err':test_error})
+print(f"cost: {communication_cost}")
+print(f"train_error: {train_error}")
+print(f"test_error: {test_error}")
+plot_result({'taskID':'1-5', 'cost':communication_cost, 'train_err':train_error, 'test_err':test_error})
 
-## TASK 2 ***************************************************************
+# TASK 2 ***************************************************************
 
-# regressor = MyRegressor(alpha=0)
-# train_error = []
-# test_error = []
-# communication_cost = [0.1]
+regressor = MyRegressor(alpha=0)
+train_error = []
+test_error = []
+communication_cost = [0.1]
 
-# for per in communication_cost:
+for per in communication_cost:
 
-#     regressor.training_cost = per 
-#     cost, error = regressor.train_online(trainX, trainY)
-#     selected_feat = regressor.features
-#     train_error.append(error)
+    regressor.training_cost = per 
+    cost, error = regressor.train_online(trainX, trainY)
+    selected_feat = regressor.features
+    train_error.append(error)
 
-#     testX_s = testX[:, selected_feat]
-#     _, error = regressor.evaluate(testX_s, testY)
-#     test_error.append(error)
+    testX_s = testX[:, selected_feat]
+    _, error = regressor.evaluate(testX_s, testY)
+    test_error.append(error)
 
-# print(f"cost: {communication_cost}")
-# print(f"train_error: {train_error}")
-# print(f"test_error: {test_error}")
-# plot_result({'taskID':'2', 'cost':communication_cost, 'train_err':train_error, 'test_err':test_error})
+print(f"cost: {communication_cost}")
+print(f"train_error: {train_error}")
+print(f"test_error: {test_error}")
+plot_result({'taskID':'2', 'cost':communication_cost, 'train_err':train_error, 'test_err':test_error})
 
 
 
